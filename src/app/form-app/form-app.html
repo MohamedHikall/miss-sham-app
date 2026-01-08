@@ -287,34 +287,59 @@
 
                 $scope.submitForm = function () {
                     if ($scope.participationForm.$valid) {
-                        const message = `
-🌟 استمارة مشاركة جديدة - Miss Sham 🌟
+                        // تنسيق الرسالة
+                        const message = `🌟 *استمارة مشاركة جديدة - Miss Sham* 🌟
 
-👤 الاسم: ${$scope.formData.name}
-📅 تاريخ الميلاد: ${$scope.formData.birthDate}
-📍 العنوان: ${$scope.formData.address}
-🎓 المؤهل التعليمي: ${$scope.formData.education}
-📏 الطول: ${$scope.formData.height} سم
-⭕ محيط الخصر: ${$scope.formData.waist} سم
-            `.trim();
+👤 *الاسم:* ${$scope.formData.name}
+📅 *تاريخ الميلاد:* ${$scope.formData.birthDate}
+📍 *العنوان:* ${$scope.formData.address}
+🎓 *المؤهل التعليمي:* ${$scope.formData.education}
+📏 *الطول:* ${$scope.formData.height} سم
+⭕ *محيط الخصر:* ${$scope.formData.waist} سم
+
+✨ _تم الإرسال من موقع Miss Sham_`;
 
                         // إرسال إلى واتساب
-                        const whatsappNumber = '201068692087'; // غيّر الرقم هنا
+                        const whatsappNumber = '201068692087'; // رقم الواتساب
                         const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+                        // فتح واتساب في نافذة جديدة
                         $window.open(whatsappUrl, '_blank');
 
-                        // إرسال إلى الإيميل
-                        const emailSubject = 'استمارة مشاركة جديدة - Miss Sham';
-                        const mailtoUrl = `mailto:taghred.hikal@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(message)}`;
-
+                        // إرسال إلى الإيميل بعد ثانية واحدة
                         setTimeout(function () {
+                            const emailSubject = '🌟 استمارة مشاركة جديدة - Miss Sham';
+                            const emailBody = `استمارة مشاركة جديدة - Miss Sham
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+الاسم الكامل: ${$scope.formData.name}
+تاريخ الميلاد: ${$scope.formData.birthDate}
+العنوان: ${$scope.formData.address}
+المؤهل التعليمي: ${$scope.formData.education}
+الطول: ${$scope.formData.height} سم
+محيط الخصر: ${$scope.formData.waist} سم
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+تم الإرسال من موقع Miss Sham
+✨ حظاً موفقاً للمشاركة ✨`;
+
+                            const mailtoUrl = `mailto:taghred.hikal@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
                             $window.location.href = mailtoUrl;
                         }, 1000);
+
+                        // رسالة نجاح (اختياري)
+                        alert('✨ تم إرسال الاستمارة بنجاح! سيتم فتح واتساب والإيميل الآن.');
+
                     } else {
                         // تحديد جميع الحقول كـ touched لإظهار رسائل الخطأ
-                        angular.forEach($scope.participationForm.$error.required, function (field) {
-                            field.$setTouched();
+                        angular.forEach($scope.participationForm.$error, function (field) {
+                            angular.forEach(field, function (errorField) {
+                                errorField.$setTouched();
+                            });
                         });
+
+                        // رسالة تنبيه
+                        alert('⚠️ الرجاء ملء جميع الحقول المطلوبة');
                     }
                 };
             }]);
